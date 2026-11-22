@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MediLearn | Dental Academy</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<header>
+<a class="brand" href="#">MediLearn</a>
+<nav>
+<a href="#courses">Courses</a>
+<a href="#features">About</a>
+<a href="#quiz">Quiz</a>
+</nav>
+<a class="navbtn" href="#courses">Start Learning</a>
+</header>
+
+<main>
+<section class="hero">
+<div>
+<small class="eyebrow">YOUR DENTAL LEARNING COMPANION</small>
+<h1>Understand the science.<br><em>Master the details.</em></h1>
+<p>Build a stronger foundation in dental anatomy, oral histology, and the science behind clinical dentistry — one focused lesson at a time.</p>
+<a class="btn" href="#courses">Explore Courses →</a>
+</div>
+<div class="hero-art">
+<div class="art-card">
+<small>LEARNING FOCUS · FOUNDATIONS</small>
+<div class="tooth">✧</div>
+<h3>Dental Anatomy</h3>
+<p>Learn structure. Connect concepts.</p>
+</div>
+</div>
+</section>
+
+<section class="stats">
+<div><b>06</b><span>Focused Modules</span></div>
+<div><b>05</b><span>Quiz Questions</span></div>
+<div><b>01</b><span>Learning Journey</span></div>
+<div class="tagline">Small steps. Strong foundations.</div>
+</section>
+
+<section class="section" id="courses">
+<div class="heading">
+<div>
+<small class="eyebrow">THE LEARNING LIBRARY</small>
+<h2>Explore your <em>courses</em></h2>
+<p>Build your knowledge across essential subjects for dental students.</p>
+</div>
+</div>
+
+<div class="progress">
+<div><span>Your learning progress</span><b id="progressText">0 of 6 completed</b></div>
+<div class="track"><i id="progressBar"></i></div>
+</div>
+
+<div class="grid">
+{% for lesson in lessons %}
+<article class="course">
+<div class="course-top">
+<span class="symbol">{{ ["◈","◎","✧","⌘","▤","⌁"][loop.index0] }}</span>
+<small>{{ lesson.level }}</small>
+</div>
+<label>{{ lesson.category }}</label>
+<h3>{{ lesson.title }}</h3>
+<p>{{ lesson.summary }}</p>
+<div class="meta">
+<span>◷ {{ lesson.duration }}</span>
+<span data-status="{{ lesson.id }}">Not started</span>
+</div>
+<button data-lesson="{{ lesson.id }}">Open lesson →</button>
+</article>
+{% endfor %}
+</div>
+</section>
+
+<section class="features" id="features">
+<div>
+<small class="eyebrow">A BETTER WAY TO STUDY</small>
+<h2>Make every study session <em>count.</em></h2>
+<p>Clear explanations, focused learning objectives, and quick knowledge checks — together in one simple space.</p>
+<ul>
+<li><b>✓ Structured lessons</b><br>Learn concepts in a clear sequence.</li>
+<li><b>✓ Active recall</b><br>Check what you know with short quizzes.</li>
+<li><b>✓ Visible progress</b><br>Track the lessons you complete.</li>
+</ul>
+</div>
+<div class="study-card">
+<small>YOUR STUDY SPACE</small>
+<h3>Keep building<br>your foundation.</h3>
+<div class="progress">
+<div><span>Course completion</span><b id="panelProgress">0%</b></div>
+<div class="track"><i id="panelBar"></i></div>
+</div>
+<blockquote>✦ Study tip<br>Try explaining a concept in your own words after each lesson.</blockquote>
+</div>
+</section>
+
+<section class="quiz-section" id="quiz">
+<div>
+<small class="eyebrow">TEST YOUR KNOWLEDGE</small>
+<h2>Ready for a <em>quick check?</em></h2>
+<p>Answer five questions based on the learning modules and review your explanations.</p>
+</div>
+<div class="quizbox">
+<div class="quizhead">FOUNDATION QUIZ <span>05 QUESTIONS</span></div>
+<div id="quizArea">
+<p>A short knowledge check is waiting for you.</p>
+<button class="btn" id="startQuiz">Start the quiz →</button>
+</div>
+</div>
+</section>
+
+<section class="assistant">
+<div>
+<small class="eyebrow">STUDY SUPPORT</small>
+<h2>Questions while you learn?</h2>
+<p>Ask MediLearn's study helper about topics covered in this learning library.</p>
+</div>
+<div class="chat">
+<div class="chathead">
+<b class="avatar">M</b>
+<span><strong>MediLearn Study Helper</strong><small>● Educational demo</small></span>
+</div>
+<div id="chatMessages">
+<p class="bot">Hello! Ask me about skull bones, tooth structure, the periodontium, or the trigeminal nerve.</p>
+</div>
+<form id="chatForm">
+<input id="chatInput" placeholder="Ask an anatomy question..." autocomplete="off">
+<button type="submit">↑</button>
+</form>
+<small class="demo">DEMO MODE · PREPARED RESPONSES, NOT A LIVE AI MODEL</small>
+</div>
+</section>
+</main>
+
+<footer>
+<a class="brand" href="#">MediLearn</a>
+<p>Learn the foundations. Grow your confidence.</p>
+<small>© 2026 MediLearn Academy · Educational use only</small>
+</footer>
+
+<div class="modal" id="lessonModal">
+<div class="shade" data-close></div>
+<div class="dialog">
+<button class="close" data-close>×</button>
+<small class="eyebrow" id="modalCategory"></small>
+<h2 id="modalTitle"></h2>
+<div id="modalObjectives" class="objectives"></div>
+<div id="modalContent"></div>
+<button class="btn" id="completeLesson">Mark lesson as complete ✓</button>
+</div>
+</div>
+
+<script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>
