@@ -157,27 +157,29 @@ document.addEventListener("DOMContentLoaded", () => {
   $("startQuiz").addEventListener("click", startQuiz);
 
   async function startQuiz() {
-    try {
-      const response = await fetch("/api/quiz");
-      if (!response.ok) throw new Error("Quiz unavailable");
+  try {
+    const response = await fetch("/api/quiz");
+    if (!response.ok) throw new Error("Quiz unavailable");
 
-      const data = await response.json();
+    const data = await response.json();
 
-      quizQuestions = data.questions || [];
-      quizAnswers = [];
-      quizIndex = 0;
-      quizLocked = false;
+    quizQuestions = (Array.isArray(data) ? data : data.questions || []).map(item => ({
+      question: item.q || item.question,
+      options: item.options
+    }));
 
-      if (!quizQuestions.length) throw new Error("No questions found");
+    quizAnswers = [];
+    quizIndex = 0;
+    quizLocked = false;
 
-      renderQuestion();
-    } catch (error) {
-      $("quizArea").textContent =
-        "The quiz could not be loaded. Please try again.";
-    }
+    if (!quizQuestions.length) throw new Error("No questions found");
+
+    renderQuestion();
+  } catch (error) {
+    $("quizArea").textContent =
+      "The quiz could not be loaded. Please try again.";
   }
-
-  function renderQuestion() {
+function renderQuestion() {
     const question = quizQuestions[quizIndex];
 
     $("quizArea").innerHTML = `
