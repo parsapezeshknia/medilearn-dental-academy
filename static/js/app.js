@@ -233,37 +233,43 @@ function renderQuestion() {
     }
   }
 
-  async function showResult() {
-    try {
-      const response = await fetch("/api/quiz/submit", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ answers: quizAnswers })
-      });
+ async function showResult() {
+  try {
+    const response = await fetch("/api/quiz/submit", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ answers: quizAnswers })
+    });
 
-      const result = await response.json();
-      if (!response.ok) throw new Error("Could not submit answers");
+    if (!response.ok) throw new Error("Could not submit answers");
 
-      const details = (result.results || []).map((item, index) => `
-        <p class="quiz-feedback">
-          <strong>Question ${index + 1}:</strong>
-          ${item.correct ? "Correct ✓" : "Review"}
-          — ${escapeHTML(item.explanation)}
-        </p>
-      `).join("");
+    const result = await response.json();
 
-      $("quizArea").innerHTML = `
-        <h2>${result.score} / ${result.total}</h2>
-        <h3>Your score: ${result.percentage}%</h3>
-        <p>Review the explanations to strengthen your knowledge.</p>
-        ${details}
-        <button class="btn" id="retryQuiz">Try again ↻</button>
-      `;
+    const details = (result.details || []).map((item, index) => `
+      <p class="quiz-feedback">
+        <strong>Question ${index + 1}:</strong>
+        ${item.correct ? "Correct ✓" : "Review"}
+        - ${escapeHTML(item.explanation || "")}
+      </p>
+    `).join("");
 
-      $("retryQuiz").addEventListener("click", startQuiz);
-    } catch (error) {
-      $("quizArea").textContent =
-        "There was a problem submitting your answers. Please try again.";
-    }
+    const percentage = result.total
+      ? Math.round((result.score / result.total) * 100)
+      : 0;
+
+    $("quizArea").innerHTML = `
+      <h2>${result.score} / ${result.total}</h2>
+      <h3>Your score: ${percentage}%</h3>
+      <p>Review the explanations to strengthen your knowledge.</p>
+      ${details}
+      <button class="btn" id="retryQuiz">Try again ↻</button>
+    `;
+
+    $("retryQuiz").addEventListener("click", startQuiz);
+
+  } catch (error) {
+    $("quizArea").textContent =
+      "There was a problem submitting your answers. Please try again.";
+  }
   }
 });
